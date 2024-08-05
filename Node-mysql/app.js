@@ -18,7 +18,11 @@ const db = mysql.createConnection({
 
 // js or css for frontend
 const publicDirectory = path.join(__dirname, './public'); //direname - curr directory
-app.use(express.static(publicDirectory))
+app.use(express.static(publicDirectory));
+
+// grab data from any forms
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // use hbs for view engine
 app.set('view engine', 'hbs');
@@ -32,17 +36,14 @@ db.connect( (error) => {
     }
 })
 
-// "/"-home page, run the function with a request and response(frontend)
-// route to go to the home page
-app.get("/", (req, res) => {
-    // res.send("<h1>Home Page</h1>")
-    res.render("index"); // specify which file to render
-});
+// define routes
+app.use('/', require('./routes/pages'));
+app.use('/auth', require('./routes/auth'));
 
 //tell express which port to listen, choose whatever
 // start a function in the server
 app.listen(5001, () => {
     //to print on terminal
     console.log("server started on port 5001")
-})
+});
 

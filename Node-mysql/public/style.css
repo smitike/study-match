@@ -1,5 +1,8 @@
+body {
+    background-color: rgba(115, 104, 128, 0.773);
+}
 nav {
-    background-color: bisque;
+    background-color: rgb(195, 188, 180);
     color:rgb(18, 125, 219);
     padding: 30px 60px;
     /* puts the elements in different corners separately*/
