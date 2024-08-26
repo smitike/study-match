@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';  // Make sure this import is present
 
 <h1>Register</h1>
 function Register() {
@@ -8,6 +9,8 @@ function Register() {
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();  // Initialize the navigate function
+
 
     const registerUser = async (e) => {
         e.preventDefault();
@@ -19,7 +22,13 @@ function Register() {
                 password,
                 passwordConfirm
             });
-            setMessage(response.data.message);
+            if (response.data.message === 'User registered') {
+                navigate('/profile_creation'); // Redirect to profile creation page
+            } else {
+                setMessage(response.data.message);
+            }
+
+            // setMessage(response.data.message);
         } catch (error) {
             if (error.response) {
                 setMessage(`Error: ${error.response.data.message || error.response.data}`);

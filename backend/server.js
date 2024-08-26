@@ -3,10 +3,14 @@ const express = require('express');
 const cors = require('cors');
 const auth = require('./auth'); // Import the auth module
 const mysql = require('mysql');
+const profile = require('./profile');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+app.use(auth);  // Use the auth routes
+app.use(profile);  // Use the profile routes
 
 const db = mysql.createConnection({
     host: process.env.DATABASE_HOST,
@@ -25,6 +29,7 @@ db.connect((err) => {
 });
 
 app.post('/register', auth.register); // Use the register function from auth.js
+app.post('/login', auth.login); // Use the login function from auth.js
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

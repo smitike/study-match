@@ -39,3 +39,36 @@ exports.register = (req, res) => {
         });
     });
 };
+
+// Login function
+exports.login = (req, res) => {
+    const { email, password } = req.body;
+
+    console.log(`Attempting to log in with email: ${email}`);
+
+    db.query('SELECT * FROM user WHERE email = ?', [email], async (error, results) => {
+        if (error) {
+            console.log("Database query error:", error);
+            return res.status(500).json({ message: 'Database query error' });
+        }
+
+        if (results.length === 0) {
+            console.log("No user found with this email.");
+            return res.status(400).json({ message: 'Email or Password is incorrect' });
+        }
+
+        const user = results[0];
+        console.log("User found:", user);
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        console.log("Password match result:", isMatch);
+
+        if (!isMatch) {
+            console.log("Password does not match.");
+            return res.status(400).json({ message: 'Email or Password is incorrect' });
+        }
+
+        console.log("Login successful.");
+        return res.status(200).json({ message: 'Successfully logged in' });
+    });
+};
