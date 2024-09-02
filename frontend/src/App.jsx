@@ -4,7 +4,7 @@ import Welcome from './components/Welcome';
 import Login from './components/Login';
 import Register from './components/Register';
 import ProfileCreation from './components/ProfileCreation';
-import HomePage from './components/HomePage';
+import HomePage from './components/HomePage.jsx';
 
 const router = createBrowserRouter([
   {
