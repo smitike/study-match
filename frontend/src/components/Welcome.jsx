@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styles from '../styles/Home.module.css';
+import styles from '../styles/Welcome.module.css';
 
-function Home() {
+function Welcome() {
   return (
     <div className={styles.container}>
       <h1>Welcome to Our App</h1>
@@ -24,4 +24,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Welcome;

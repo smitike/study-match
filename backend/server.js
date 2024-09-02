@@ -1,35 +1,36 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const auth = require('./auth'); // Import the auth module
-const mysql = require('mysql');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+
+const auth = require('./auth');
 const profile = require('./profile');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use(auth);  // Use the auth routes
-app.use(profile);  // Use the profile routes
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    store: new MySQLStore({
+        host: process.env.DATABASE_HOST,
+        port: 8889,
+        user: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE
+    }),
+    cookie: { secure: false } // Use secure: true if using HTTPS
+}));
 
-const db = mysql.createConnection({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE,
-    port: '8889'
-});
-
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed: ' + err.stack);
-        return;
-    }
-    console.log('Connected to database.');
-});
-
+// app.use('/auth', auth);  // Use the auth routes
 app.post('/register', auth.register); // Use the register function from auth.js
 app.post('/login', auth.login); // Use the login function from auth.js
+
+app.post('/profile_creation', profile.createProfile);
+// app.use('/profile', profile);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

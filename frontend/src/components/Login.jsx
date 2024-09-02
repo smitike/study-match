@@ -19,6 +19,8 @@ function Login() {
       // Assuming the backend sends a success message on successful login
       if (response.data.success) {
         setMessage('Successfully logged in');
+        const userId = response.data.userId;  // Get the user ID from response
+        // navigate('/home_page', { state: { userId } }); 
       } else {
         setMessage(response.data.message);
       }

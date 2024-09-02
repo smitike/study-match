@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';  // Assuming you're using axios for HTTP requests
+
 
 function ProfileCreation() {
     const [school, setSchool] = useState('');
@@ -6,6 +8,9 @@ function ProfileCreation() {
     const [numClasses, setNumClasses] = useState(0);
     const [classes, setClasses] = useState([]);
     const [message, setMessage] = useState('');
+    const userId = location.state?.userId || sessionStorage.getItem('userId');
+    
+
 
     const handleNumClassesChange = (e) => {
         const value = parseInt(e.target.value, 10);
@@ -20,10 +25,26 @@ function ProfileCreation() {
         setClasses(newClasses);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Submit the data to your backend or handle it as necessary
         console.log({ school, year, classes });
+        try {
+            // Replace with your backend endpoint
+            const response = await axios.post('http://localhost:5001/profile_creation', {
+                school,
+                year,
+                classes
+            }, { withCredentials: true }); // Include credentials to allow cookies 
+
+            if (response.data.success) {
+                setMessage('Profile information saved successfully!');
+            } else {
+                setMessage('Failed to save profile information.');
+            }
+        } catch (error) {
+            setMessage(`Error: ${error.response?.data?.message || error.message}`);
+        }
     };
 
     return (

@@ -10,20 +10,45 @@ function Register() {
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();  // Initialize the navigate function
+    const [school, setSchool] = useState('');
+    const [year, setYear] = useState('');
+    const [numClasses, setNumClasses] = useState(0);
+    const [classes, setClasses] = useState([]);
+
+    const handleNumClassesChange = (e) => {
+        const value = parseInt(e.target.value, 10);
+        setNumClasses(value);
+        const newClasses = Array(value).fill('');
+        setClasses(newClasses);
+    };
+
+    const handleClassChange = (index, value) => {
+        const newClasses = [...classes];
+        newClasses[index] = value;
+        setClasses(newClasses);
+    };
 
 
     const registerUser = async (e) => {
         e.preventDefault();
+        console.log('Register button clicked');
 
         try {
             const response = await axios.post('http://localhost:5001/register', {
                 name,
                 email,
                 password,
-                passwordConfirm
+                passwordConfirm,
+                school,
+                year,
+                classes
             });
             if (response.data.message === 'User registered') {
-                navigate('/profile_creation'); // Redirect to profile creation page
+                const userId = response.data.userId;  // Get the user ID from response
+                console.log(userId);
+                // navigate('/success');
+                navigate('/home_page', { state: { userId } }); // Pass the userId to ProfileCreation
+                // navigate('/profile_creation'); // Redirect to profile creation page
             } else {
                 setMessage(response.data.message);
             }
@@ -78,6 +103,44 @@ function Register() {
                         required 
                     />
                 </div>
+                <div>
+                    <label>School</label>
+                    <input 
+                        type="text" 
+                        value={school} 
+                        onChange={(e) => setSchool(e.target.value)} 
+                        required 
+                    />
+                </div>
+                <div>
+                    <label>Year</label>
+                    <input 
+                        type="text" 
+                        value={year} 
+                        onChange={(e) => setYear(e.target.value)} 
+                        required 
+                    />
+                </div>
+                <div>
+                    <label>Number of Classes</label>
+                    <input 
+                        type="number" 
+                        value={numClasses} 
+                        onChange={handleNumClassesChange} 
+                        required 
+                    />
+                </div>
+                {classes.map((className, index) => (
+                    <div key={index}>
+                        <label>Class {index + 1} Name</label>
+                        <input 
+                            type="text" 
+                            value={className} 
+                            onChange={(e) => handleClassChange(index, e.target.value)} 
+                            required 
+                        />
+                    </div>
+                ))}
                 <button type="submit">Register</button>
             </form>
             {message && <p>{message}</p>}

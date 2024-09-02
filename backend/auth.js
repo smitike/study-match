@@ -1,18 +1,14 @@
-const mysql = require("mysql");
+const express = require('express');
 const bcrypt = require('bcryptjs');
+const router = express.Router();
+const db = require('./db');
+const mysql = require("mysql");
 
-const db = mysql.createConnection({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE,
-    port: '8889'
-});
 
 exports.register = (req, res) => {
     console.log(req.body);
 
-    const { name, email, password, passwordConfirm } = req.body;
+    const { name, email, password, passwordConfirm, school, year, classes } = req.body;
 
     db.query('SELECT email FROM user WHERE email = ?', [email], async (error, results) => {
         if (error) {
@@ -28,20 +24,27 @@ exports.register = (req, res) => {
         let hashedPassword = await bcrypt.hash(password, 8);
         console.log(hashedPassword);
 
-        db.query('INSERT INTO user SET ?', { username: name, email: email, password: hashedPassword }, (error, results) => {
+        const classesString = JSON.stringify(classes);
+
+        db.query('INSERT INTO user SET ?', { username: name, email: email, password: hashedPassword, school: school, year: year, classes: classesString }, (error, results) => {
             if (error) {
                 console.log(error);
                 return res.status(500).json({ message: 'User registration failed' });
             } else {
                 console.log(results);
-                return res.status(201).json({ message: 'User registered' });
+                const userId = results.insertId;
+                return res.status(201).json({ message: 'User registered', userId });
+
+                // req.session.userId = userId;
+                // console.log(userId);
+                // return res.status(201).json({ message: 'User registered', userId});
             }
         });
     });
 };
-
+// req.session.userId = user.id;
 // Login function
-exports.login = (req, res) => {
+exports.login =  (req, res) => {
     const { email, password } = req.body;
 
     console.log(`Attempting to log in with email: ${email}`);
@@ -59,6 +62,9 @@ exports.login = (req, res) => {
 
         const user = results[0];
         console.log("User found:", user);
+        const userId = user.id;
+        // req.session.userId = user.id; // Store user ID in session
+        // res.json({ success: true, message: 'Logged in' });
 
         const isMatch = await bcrypt.compare(password, user.password);
         console.log("Password match result:", isMatch);
@@ -69,6 +75,9 @@ exports.login = (req, res) => {
         }
 
         console.log("Login successful.");
+        req.session.userId = user.id;
         return res.status(200).json({ message: 'Successfully logged in' });
     });
 };
+
+// module.exports = router;
