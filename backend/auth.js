@@ -76,7 +76,7 @@ exports.login =  (req, res) => {
 
         console.log("Login successful.");
         req.session.userId = user.id;
-        return res.status(200).json({ message: 'Successfully logged in' });
+        return res.status(200).json({ message: 'Successfully logged in', userId });
     });
 };
 

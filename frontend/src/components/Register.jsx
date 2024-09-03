@@ -45,9 +45,9 @@ function Register() {
             });
             if (response.data.message === 'User registered') {
                 const userId = response.data.userId;  // Get the user ID from response
-                console.log(userId);
-                // navigate('/success');
-                navigate('/home_page', { state: { userId } }); // Pass the userId to ProfileCreation
+                localStorage.setItem('userId', userId); // Store user ID in local storage
+                navigate('/profile'); // Redirect to profile page
+                // navigate('/home_page', { state: { userId } }); // Pass the userId to ProfileCreation
                 // navigate('/profile_creation'); // Redirect to profile creation page
             } else {
                 setMessage(response.data.message);

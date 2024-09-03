@@ -11,6 +11,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const userRoutes = require('./user');
+app.use('/user', userRoutes);
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,

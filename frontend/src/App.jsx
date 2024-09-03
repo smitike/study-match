@@ -5,6 +5,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import ProfileCreation from './components/ProfileCreation';
 import HomePage from './components/HomePage.jsx';
+import ProfilePage from './components/ProfilePage.jsx';
+import Sidebar from './components/Sidebar.jsx';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
   {
     path: '/home_page',
     element: <HomePage />,
+  },
+  {
+    path: '/profile',
+    element: <ProfilePage />,
+  },
+  {
+    path: '/sidebar',
+    element: <Sidebar />,
   },
 ]);
 

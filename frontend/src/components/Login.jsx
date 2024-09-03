@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styles from '../styles/Login.module.css';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -17,10 +19,10 @@ function Login() {
       });
 
       // Assuming the backend sends a success message on successful login
-      if (response.data.success) {
-        setMessage('Successfully logged in');
+      if (response.data.message == 'Successfully logged in') {
         const userId = response.data.userId;  // Get the user ID from response
-        navigate('/home_page', { state: { userId } }); 
+        localStorage.setItem('userId', userId); // Store user ID in local storage
+        navigate('/profile'); // Redirect to profile page 
       } else {
         setMessage(response.data.message);
       }
