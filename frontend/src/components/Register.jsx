@@ -68,7 +68,7 @@ function Register() {
             <h1>Register</h1>
             <form onSubmit={registerUser}>
                 <div>
-                    <label>Name</label>
+                    <label>Full Name</label>
                     <input 
                         type="text" 
                         value={name} 

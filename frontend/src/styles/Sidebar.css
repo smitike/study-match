@@ -1,10 +1,11 @@
 /* Sidebar.css */
 .sidebar {
-    width: 250px;
-    background-color: #f5f5f5;
+    width: 200px;
+    background-color: #857570;
+    border-right: 1px solid #e0e0e0;
     padding: 20px;
     height: 100vh;
-    position: fixed;
+    font-size: 1.2em;
 }
 
 .sidebar h2 {
@@ -23,12 +24,32 @@
 .sidebar ul li a {
     text-decoration: none;
     color: #333;
+    font-size: 1.1em; /* Make links bigger */
+    padding: 8px 16px; /* Add padding to make the box visible */
+    display: block; /* Make the link fill the li */
 }
 
-.sidebar .profile-pic {
-    width: 80px;
-    height: 80px;
-    background-color: #ddd;
-    border-radius: 50%;
+.active-link a {
+    background-color: #6d7780; /* Background color for the active link */
+    color: white; /* Text color for the active link */
+    border-radius: 5px; /* Rounded corners for the box */
+}
+
+.profile-circle {
+    width: 80px; /* Adjust width to desired size */
+    height: 80px; /* Adjust height to desired size */
+    overflow: hidden; /* Hide any overflow of the image */
+    border-radius: 50%; /* Make it a circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 15px;
+    background-color: #ddd; /* Background color for the circle */
+}
+
+.profile-image {
+    width: 100%; /* Image should fill the circular container */
+    height: 100%; /* Maintain aspect ratio */
+    object-fit: cover; /* Crop the image to fit the container */
+    object-position: center;
 }

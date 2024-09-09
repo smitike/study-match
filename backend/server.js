@@ -12,7 +12,15 @@ app.use(express.json());
 app.use(cors());
 
 const userRoutes = require('./user');
+const sessionRoutes = require('./sessions');
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json()); 
+
 app.use('/user', userRoutes);
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static('uploads'));
+app.use('/sessions', sessionRoutes);
 
 app.use(session({
     secret: process.env.SESSION_SECRET,

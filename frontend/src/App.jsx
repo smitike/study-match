@@ -7,6 +7,8 @@ import ProfileCreation from './components/ProfileCreation';
 import HomePage from './components/HomePage.jsx';
 import ProfilePage from './components/ProfilePage.jsx';
 import Sidebar from './components/Sidebar.jsx';
+import CreateSessionPage from './components/CreateSessionPage.jsx';
+import { UserProvider } from './UserContext';
 
 const router = createBrowserRouter([
   {
@@ -37,10 +39,19 @@ const router = createBrowserRouter([
     path: '/sidebar',
     element: <Sidebar />,
   },
+  {
+    path: '/create-session',
+    element: <CreateSessionPage />,
+  },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+    return (
+        <UserProvider>
+          <RouterProvider router={router} />
+        </UserProvider>
+      );
+//   return <RouterProvider router={router} />;
 }
 
 export default App;

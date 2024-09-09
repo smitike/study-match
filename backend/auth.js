@@ -25,8 +25,9 @@ exports.register = (req, res) => {
         console.log(hashedPassword);
 
         const classesString = JSON.stringify(classes);
+        const defaultProfilePic = '/assets/profile.png';
 
-        db.query('INSERT INTO user SET ?', { username: name, email: email, password: hashedPassword, school: school, year: year, classes: classesString }, (error, results) => {
+        db.query('INSERT INTO user SET ?', { username: name, email: email, password: hashedPassword, school: school, year: year, classes: classesString, profile_pic_url: defaultProfilePic }, (error, results) => {
             if (error) {
                 console.log(error);
                 return res.status(500).json({ message: 'User registration failed' });
