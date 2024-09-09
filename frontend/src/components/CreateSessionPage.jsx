@@ -46,8 +46,8 @@ function CreateSessionPage() {
             
             setMessage(response.data.message);
             if (response.data.message === 'Successfully created your session!') {
-                alert('Successfully created your session!');
-                window.location.href = '/profile'; // Redirect to Profile page after session creation
+                navigate('/profile');
+                // window.location.href = '/profile'; // Redirect to Profile page after session creation
             }
         } catch (error) {
             console.error('Error creating session:', error);
