@@ -8,6 +8,7 @@ function ProfilePage() {
     const [sessions, setSessions] = useState([]); // Store user sessions
     const userId = localStorage.getItem('userId'); // Assuming the user ID is stored in localStorage
     const [selectedFile, setSelectedFile] = useState(null);
+    const [joinedSessions, setJoinedSessions] = useState([]);
 
     useEffect(() => {
         // Fetch user data and sessions
@@ -26,6 +27,20 @@ function ProfilePage() {
 
         fetchUserProfile();
     }, [userId]);
+    useEffect(() => {
+        // Fetch sessions the user has joined
+        const fetchJoinedSessions = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5001/sessions/user/joined-sessions/${userId}`);
+                setJoinedSessions(response.data.sessions); // Update with the actual session objects
+            } catch (error) {
+                console.error('Error fetching joined sessions:', error);
+            }
+        };
+
+        fetchJoinedSessions();
+    }, [userId]);
+
 
     const formatTime = (timeString) => {
         const [hour, minute] = timeString.split(':');
@@ -38,30 +53,6 @@ function ProfilePage() {
     if (!user) {
         return <div>Loading...</div>;
     }
-
-    const handleFileChange = (e) => {
-        setSelectedFile(e.target.files[0]);
-    };
-
-    const handleFileUpload = async () => {
-        if (!selectedFile) return;
-
-        const formData = new FormData();
-        formData.append('profilePic', selectedFile);
-        formData.append('userId', userId);
-
-        try {
-            const response = await axios.post('http://localhost:5001/upload-profile-pic', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            setUser({ ...user, profile_pic_url: response.data.profilePicUrl });
-            alert(response.data.message);
-        } catch (error) {
-            console.error('Error uploading profile picture:', error);
-        }
-    };
 
     // Use the uploaded profile picture or default image
     const profileImageUrl = user.profile_pic_url ? `http://localhost:5001/${user.profile_pic_url}` : '/assets/profile.png';
@@ -90,8 +81,21 @@ function ProfilePage() {
                         <p>No Session History So Far</p>
                     )}
                 </div>
-                {/* <input type="file" onChange={handleFileChange} />
-                <button onClick={handleFileUpload} className="upload-button">Upload Profile Picture</button> */}
+
+                <h3>Sessions You've Joined</h3>
+                    {joinedSessions.length > 0 ? (
+                        joinedSessions.map((session, index) => (
+                            <div key={index} className="session-card">
+                                <h3>{session.class_name} - {session.purpose}</h3>
+                                <p>{formatTime(session.from_time)} - {formatTime(session.to_time)}</p>
+                                <p>Location: {session.location}</p>
+                                <button className="join-button" disabled>Joined!</button>
+                                <p>{session.participants} participants</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No sessions joined yet.</p>
+                    )}
             </div>
         </div>
     );

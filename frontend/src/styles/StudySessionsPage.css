@@ -15,3 +15,23 @@
     flex-direction: column; /* Arrange children vertically */
 }
 
+.join-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.join-button.leave-button {
+    background-color: yellow;
+    color: black;
+}
+
+.join-button:hover,
+.join-button.leave-button:hover {
+    opacity: 0.8;
+}
+
+

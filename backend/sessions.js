@@ -40,62 +40,6 @@ router.get('/user/sessions/:id', (req, res) => {
     });
 });
 
-router.post('/join-session', (req, res) => {
-    const { userId, sessionId } = req.body;
-
-    // Check if the user has already joined the session
-    db.query('SELECT * FROM session_participants WHERE user_id = ? AND session_id = ?', [userId, sessionId], (err, results) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return res.status(500).json({ message: 'Database query error' });
-        }
-
-        if (results.length > 0) {
-            return res.status(400).json({ message: 'User has already joined the session' });
-        }
-
-        // Insert the new participant
-        db.query('INSERT INTO session_participants (user_id, session_id) VALUES (?, ?)', [userId, sessionId], (err, result) => {
-            if (err) {
-                console.error('Database insert error:', err);
-                return res.status(500).json({ message: 'Failed to join session' });
-            }
-
-            // Increment the participants count
-            db.query('UPDATE study_sessions SET participants = participants + 1 WHERE id = ?', [sessionId], (err) => {
-                if (err) {
-                    console.error('Error updating participants count:', err);
-                    return res.status(500).json({ message: 'Error updating participants count' });
-                }
-
-                return res.status(200).json({ message: 'Successfully joined the session!' });
-            });
-        });
-    });
-});
-
-router.post('/leave-session', (req, res) => {
-    const { userId, sessionId } = req.body;
-
-    // Remove the participant
-    db.query('DELETE FROM session_participants WHERE user_id = ? AND session_id = ?', [userId, sessionId], (err, result) => {
-        if (err) {
-            console.error('Database delete error:', err);
-            return res.status(500).json({ message: 'Failed to leave session' });
-        }
-
-        // Decrement the participants count
-        db.query('UPDATE study_sessions SET participants = participants - 1 WHERE id = ?', [sessionId], (err) => {
-            if (err) {
-                console.error('Error updating participants count:', err);
-                return res.status(500).json({ message: 'Error updating participants count' });
-            }
-
-            return res.status(200).json({ message: 'Successfully left the session!' });
-        });
-    });
-});
-
 // Endpoint to get available sessions for a user
 router.get('/available-sessions/:userId', (req, res) => {
     const userId = req.params.userId;
@@ -141,4 +85,84 @@ router.get('/available-sessions/:userId', (req, res) => {
         });
     });
 });
+
+// Endpoint to join a session
+router.post('/join-session', (req, res) => {
+    const { userId, sessionId } = req.body;
+
+    // Check if the user has already joined the session
+    db.query('SELECT * FROM session_participants WHERE user_id = ? AND session_id = ?', [userId, sessionId], (err, results) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ message: 'Database query error' });
+        }
+
+        if (results.length > 0) {
+            return res.status(400).json({ message: 'User has already joined the session' });
+        }
+
+        // Insert the new participant
+        db.query('INSERT INTO session_participants (user_id, session_id) VALUES (?, ?)', [userId, sessionId], (err, result) => {
+            if (err) {
+                console.error('Database insert error:', err);
+                return res.status(500).json({ message: 'Failed to join session' });
+            }
+
+            // Increment the participants count
+            db.query('UPDATE study_sessions SET participants = participants + 1 WHERE id = ?', [sessionId], (err) => {
+                if (err) {
+                    console.error('Error updating participants count:', err);
+                    return res.status(500).json({ message: 'Error updating participants count' });
+                }
+
+                return res.status(200).json({ message: 'Successfully joined the session!' });
+            });
+        });
+    });
+});
+
+// Route to get all sessions a user has joined
+router.get('/user/joined-sessions/:userId', (req, res) => {
+    const userId = req.params.userId;
+
+    const query = `
+        SELECT study_sessions.* 
+        FROM study_sessions
+        JOIN session_participants ON study_sessions.id = session_participants.session_id
+        WHERE session_participants.user_id = ?
+    `;
+
+    db.query(query, [userId], (error, results) => {
+        if (error) {
+            console.error('Database query error:', error);
+            return res.status(500).json({ message: 'Error fetching joined sessions' });
+        }
+
+        res.json({ sessions: results });
+    });
+});
+
+router.post('/leave-session', (req, res) => {
+    const { userId, sessionId } = req.body;
+
+    // Remove the participant
+    db.query('DELETE FROM session_participants WHERE user_id = ? AND session_id = ?', [userId, sessionId], (err, result) => {
+        if (err) {
+            console.error('Database delete error:', err);
+            return res.status(500).json({ message: 'Failed to leave session' });
+        }
+
+        // Decrement the participants count
+        db.query('UPDATE study_sessions SET participants = participants - 1 WHERE id = ?', [sessionId], (err) => {
+            if (err) {
+                console.error('Error updating participants count:', err);
+                return res.status(500).json({ message: 'Error updating participants count' });
+            }
+
+            return res.status(200).json({ message: 'Successfully left the session!' });
+        });
+    });
+});
+
+
 module.exports = router;

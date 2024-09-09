@@ -9,6 +9,7 @@ function StudySessionsPage() {
     const [userSessions, setUserSessions] = useState([]); // Store sessions created by the user
     const [availableSessions, setAvailableSessions] = useState([]); // Store sessions created by others
     const userId = localStorage.getItem('userId'); // Assuming the user ID is stored in localStorage
+    const [joinedSessions, setJoinedSessions] = useState([]);
 
     useEffect(() => {
         // Fetch user data
@@ -52,11 +53,84 @@ function StudySessionsPage() {
         fetchAvailableSessions();
     }, [userId]);
 
+    useEffect(() => {
+        // Fetch sessions the user has joined
+        const fetchJoinedSessions = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5001/sessions/user/joined-sessions/${userId}`);
+                setJoinedSessions(response.data.sessions.map((session) => session.id)); // Store only the session IDs
+            } catch (error) {
+                console.error('Error fetching joined sessions:', error);
+            }
+        };
+
+        fetchJoinedSessions();
+    }, [userId]);
+
     if (!user) {
         return <div>Loading...</div>;
     }
 
     const profileImageUrl = user.profile_pic_url ? `http://localhost:5001/${user.profile_pic_url}` : '/assets/profile.png';
+
+    const handleJoinSession = async (sessionId) => {
+        try {
+            const response = await axios.post('http://localhost:5001/sessions/join-session', {
+                userId,
+                sessionId,
+            });
+
+            if (response.data.message === 'Successfully joined the session!') {
+                setJoinedSessions([...joinedSessions, sessionId]);
+                // Update the session state to show that the user has joined
+                const updatedAvailableSessions = availableSessions.map((session) => {
+                    if (session.id === sessionId) {
+                        return { ...session, participants: session.participants + 1 };
+                    }
+                    return session;
+                });
+                setAvailableSessions(updatedAvailableSessions);
+
+                // setSessions(updatedSessions);
+
+                // Add session to the user's own sessions
+                const joinedSession = sessions.find((session) => session.id === sessionId);
+                setUserSessions([...userSessions, joinedSession]);
+
+            }
+        } catch (error) {
+            console.error('Error joining session:', error);
+        }
+    };
+    const handleLeaveSession = async (sessionId) => {
+        try {
+            const response = await axios.post('http://localhost:5001/sessions/leave-session', {
+                userId,
+                sessionId,
+            });
+
+            if (response.data.message === 'Successfully left the session!') {
+                setJoinedSessions(joinedSessions.filter((id) => id !== sessionId));
+
+                // Update the participant count immediately in the state
+                const updatedAvailableSessions = availableSessions.map((session) => {
+                    if (session.id === sessionId) {
+                        return { ...session, participants: session.participants - 1 };
+                    }
+                    return session;
+                });
+
+                setAvailableSessions(updatedAvailableSessions);
+
+            }
+        } catch (error) {
+            console.error('Error leaving session:', error);
+        }
+    };
+
+
+    const hasJoinedSession = (sessionId) => joinedSessions.includes(sessionId);
+
 
     const formatTime = (timeString) => {
         const [hour, minute] = timeString.split(':');
@@ -81,7 +155,7 @@ function StudySessionsPage() {
                                 <p>{formatTime(session.from_time)} - {formatTime(session.to_time)}</p>
                                 <p>Location: {session.location}</p>
                                 <p>{session.participants} participants</p>
-                                <button className="join-button">Join Group</button>
+                                <button className="join-button" disabled>Joined!</button>
                             </div>
                         ))
                     ) : (
@@ -98,7 +172,16 @@ function StudySessionsPage() {
                                 <p>{formatTime(session.from_time)} - {formatTime(session.to_time)}</p>
                                 <p>Location: {session.location}</p>
                                 <p>{session.participants} participants</p>
-                                <button className="join-button">Join Group</button>
+                                <button
+                                    className={`join-button ${hasJoinedSession(session.id) ? 'leave-button' : ''}`}
+                                    onClick={() =>
+                                        hasJoinedSession(session.id)
+                                            ? handleLeaveSession(session.id)
+                                            : handleJoinSession(session.id)
+                                    }
+                                >
+                                    {hasJoinedSession(session.id) ? 'Leave Group' : 'Join Group'}
+                                </button>
                             </div>
                         ))
                     ) : (
