@@ -90,8 +90,8 @@ function ProfilePage() {
                         <p>No Session History So Far</p>
                     )}
                 </div>
-                <input type="file" onChange={handleFileChange} />
-                <button onClick={handleFileUpload} className="upload-button">Upload Profile Picture</button>
+                {/* <input type="file" onChange={handleFileChange} />
+                <button onClick={handleFileUpload} className="upload-button">Upload Profile Picture</button> */}
             </div>
         </div>
     );

@@ -14,10 +14,10 @@ function Sidebar() {
     return (
         <div className="sidebar">
             {/* Profile Circle with Image */}
-            <div className="profile-circle">
+            {/* <div className="profile-circle">
                 <img src={user?.profile_pic_url} alt="Profile" className="profile-image" />
-            </div>
-            <h3>{user?.username}</h3>
+            </div> */}
+            <h3>{user ? user.username : "Loading..."}</h3>
             <ul>
                 <li className={isActive('/profile') ? 'active-link' : ''}>
                     <Link to="/profile">Profile</Link>

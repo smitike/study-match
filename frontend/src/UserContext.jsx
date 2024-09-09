@@ -20,7 +20,7 @@ export const UserProvider = ({ children }) => {
                     // Set default profile picture if none is provided
                     userData.profile_pic_url = '/assets/profile.png';
                 }
-                setUser(response.data);
+                setUser(userData);
             } catch (error) {
                 console.error('Error fetching user profile:', error);
             }

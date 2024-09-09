@@ -9,6 +9,7 @@ import ProfilePage from './components/ProfilePage.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import CreateSessionPage from './components/CreateSessionPage.jsx';
 import { UserProvider } from './UserContext';
+import StudySessionsPage from './components/StudySessionsPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: '/create-session',
     element: <CreateSessionPage />,
+  },
+  {
+    path: '/study-sessions',
+    element: <StudySessionsPage />,
   },
 ]);
 

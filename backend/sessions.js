@@ -96,5 +96,49 @@ router.post('/leave-session', (req, res) => {
     });
 });
 
+// Endpoint to get available sessions for a user
+router.get('/available-sessions/:userId', (req, res) => {
+    const userId = req.params.userId;
 
+    // Fetch user's classes and school
+    const fetchUserClassesAndSchoolQuery = 'SELECT classes, school FROM user WHERE id = ?';
+
+    db.query(fetchUserClassesAndSchoolQuery, [userId], (error, results) => {
+        if (error) {
+            console.error('Database query error:', error);
+            return res.status(500).json({ message: 'Error fetching user classes and school' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Parse user's classes and get user's school
+        const userClasses = JSON.parse(results[0].classes); // Assuming classes are stored as a JSON string array
+        const userSchool = results[0].school;
+
+        // Prepare placeholders for the SQL query
+        const placeholders = userClasses.map(() => '?').join(',');
+
+        // Query to fetch sessions created by others for user's classes and school
+        const fetchSessionsQuery = `
+            SELECT * FROM study_sessions 
+            WHERE user_id != ? 
+            AND school = ? 
+            AND class_name IN (${placeholders})
+        `;
+
+        // Combine the userId, userSchool, and userClasses in the query parameters
+        const queryParams = [userId, userSchool, ...userClasses];
+
+        db.query(fetchSessionsQuery, queryParams, (error, sessions) => {
+            if (error) {
+                console.error('Database query error:', error);
+                return res.status(500).json({ message: 'Error fetching study sessions' });
+            }
+
+            res.status(200).json({ sessions });
+        });
+    });
+});
 module.exports = router;
