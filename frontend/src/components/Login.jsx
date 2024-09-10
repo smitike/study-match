@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import styles from '../styles/Login.module.css';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../UserContext';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -18,10 +20,16 @@ function Login() {
         password,
       });
 
+      
+
       // Assuming the backend sends a success message on successful login
       if (response.data.message == 'Successfully logged in') {
         const userId = response.data.userId;  // Get the user ID from response
+        const userData = response.data.user;
+        setUser(userData);
+
         localStorage.setItem('userId', userId); // Store user ID in local storage
+        // setUser(response.data.user); // Update the context directly
         navigate('/profile'); // Redirect to profile page 
       } else {
         setMessage(response.data.message);
