@@ -1,7 +1,7 @@
 /* Sidebar.css */
 .sidebar {
     width: 200px;
-    background-color: #857570;
+    background-color: #c7cfd4c1;
     border-right: 1px solid #e0e0e0;
     padding: 20px;
     height: 100vh;
@@ -30,7 +30,7 @@
 }
 
 .active-link a {
-    background-color: #6d7780; /* Background color for the active link */
+    background-color: #848e96; /* Background color for the active link */
     color: white; /* Text color for the active link */
     border-radius: 5px; /* Rounded corners for the box */
 }

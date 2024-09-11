@@ -1,30 +1,65 @@
-/* Welcome.module.css */
+/* Container for the whole page layout */
 .container {
-  text-align: center;
-  margin-top: 20%;
+  display: flex;
+  justify-content: space-between;
+  background-color: #d3d3d3f0; /* Uniform background color */
+  overflow: hidden;
+  height: 100vh; /* Full viewport height */
+  padding: 20px; /* Padding for inner spacing */
 }
 
-.formContainer {
-  margin-top: 20px;
+/* Left side with background image */
+.leftSide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1; /* Flex-grow to fill available space */
+  height: 100%; /* Full container height */
 }
 
-.formContainer div {
-  margin-bottom: 10px;
+.backgroundImage {
+  width: 90%; /* Width relative to the parent container */
+  max-width: 500px; /* Max width to prevent excessive scaling */
+  height: auto; /* Maintain aspect ratio */
+  display: block;
+  border-radius: 8px; /* Rounded corners for a softer look */
 }
 
-button {
+/* Right side with form and links */
+.rightSide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1; /* Flex-grow to fill available space */
+  height: 100%; /* Full container height */
+  padding: 20px; /* Padding for inner spacing */
+}
+
+/* Styling for buttons */
+.button {
   padding: 10px 20px;
-  background-color: #007BFF;
+  background-color: #6dafed; /* Soft blue button color */
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #0056b3;
+.button:hover {
+  background-color: #4CA1AF;
 }
 
-.loginOption {
-  margin-top: 20px;
+/* Form container styling */
+.formContainer {
+  text-align: center;
+  background: rgba(143, 154, 157, 0.657); /* Semi-transparent background */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px; /* Add padding for inner spacing */
+  width: 60%; /* Responsive width relative to the parent */
+  max-width: 400px; /* Max width to prevent excessive scaling */
+  height: auto; /* Dynamic height based on content */
 }

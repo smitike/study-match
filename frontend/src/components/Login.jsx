@@ -20,17 +20,13 @@ function Login() {
         password,
       });
 
-      
-
-      // Assuming the backend sends a success message on successful login
-      if (response.data.message == 'Successfully logged in') {
-        const userId = response.data.userId;  // Get the user ID from response
+      if (response.data.message === 'Successfully logged in') {
+        const userId = response.data.userId;
         const userData = response.data.user;
         setUser(userData);
 
         localStorage.setItem('userId', userId); // Store user ID in local storage
-        // setUser(response.data.user); // Update the context directly
-        navigate('/profile'); // Redirect to profile page 
+        navigate('/profile'); // Redirect to profile page
       } else {
         setMessage(response.data.message);
       }
@@ -45,29 +41,43 @@ function Login() {
 
   return (
     <div className={styles.container}>
-      <h1>Login Page</h1>
-      <form onSubmit={loginUser}>
-        <div>
-          <label>Email</label>
-          <input 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
+      {/* Left side with background image */}
+      <div className={styles.leftSide}>
+        <img
+          src="/assets/bg2.png" /* Replace with your actual image file name */
+          alt="Background"
+          className={styles.backgroundImage}
+        />
+      </div>
+
+      {/* Right side with login form */}
+      <div className={styles.rightSide}>
+        <h1>Login Page</h1>
+        <div className={styles.formContainer}>
+          <form onSubmit={loginUser}>
+            <div className={styles.formGroup}>
+              <label>Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className={styles.button}>Login</button>
+          </form>
+          {message && <p>{message}</p>}
         </div>
-        <div>
-          <label>Password</label>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      {message && <p>{message}</p>}
+      </div>
     </div>
   );
 }
