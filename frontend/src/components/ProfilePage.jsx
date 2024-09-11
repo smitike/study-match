@@ -61,8 +61,8 @@ function ProfilePage() {
         <div className="profile-page">
             <Sidebar username={user.username} profilePicUrl={profileImageUrl} />
             <div className="profile-content">
-                <h1>{user.username}</h1>
-                <p>{user.school} - {user.year}</p>
+                <h1>{user.username} || {user.school} - {user.year}</h1>
+                {/* <p>{user.school} - {user.year}</p> */}
                 <p>{user.classes.join(', ')}</p>
                 <div className="session-history">
                     {sessions.length > 0 ? (
