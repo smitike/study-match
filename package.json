@@ -2,11 +2,11 @@
     "name": "study-group-match",
     "version": "1.0.0",
     "scripts": {
-      "start": "cd backend && npm start",  
-      "build": "cd frontend && npm install && npm run build", 
-      "heroku-postbuild": "cd frontend && npm install && npm run build"
+        "start": "cd backend && npm start",
+        "build": "cd frontend && npm install && npm run build",
+        "heroku-postbuild": "cd frontend && npm install && npm run build"
     },
-    "dependencies": {},
-    "devDependencies": {}
-  }
-  
+    "devDependencies": {
+        "nodemon": "^3.1.7"
+    }
+}
