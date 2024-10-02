@@ -2,8 +2,8 @@
     "name": "study-group-match",
     "version": "1.0.0",
     "scripts": {
-      "start": "cd backend && npm start",  // Start backend
-      "build": "cd frontend && npm install && npm run build",  // Build frontend
+      "start": "cd backend && npm start",  
+      "build": "cd frontend && npm install && npm run build", 
       "heroku-postbuild": "cd frontend && npm install && npm run build"
     },
     "dependencies": {},
