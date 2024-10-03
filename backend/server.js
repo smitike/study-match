@@ -2,8 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
+// const session = require('express-session');
+// const MySQLStore = require('express-mysql-session')(session);
 
 const auth = require('./auth');
 const profile = require('./profile');
@@ -23,19 +23,19 @@ app.use('/user', userRoutes);
 app.use('/uploads', express.static('uploads'));
 app.use('/sessions', sessionRoutes);
 
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    store: new MySQLStore({
-        host: process.env.DATABASE_HOST,
-        port: 8889,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE
-    }),
-    cookie: { secure: false } // Use secure: true if using HTTPS
-}));
+// app.use(session({
+//     secret: process.env.SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: true,
+//     store: new MySQLStore({
+//         host: process.env.DATABASE_HOST,
+//         port: 8889,
+//         user: process.env.DATABASE_USER,
+//         password: process.env.DATABASE_PASSWORD,
+//         database: process.env.DATABASE
+//     }),
+//     cookie: { secure: false } // Use secure: true if using HTTPS
+// }));
 
 // app.use('/auth', auth);  // Use the auth routes
 app.post('/register', auth.register); // Use the register function from auth.js
