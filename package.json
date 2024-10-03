@@ -4,7 +4,7 @@
     "scripts": {
         "start": "cd backend && npm start",
         "build": "cd frontend && npm install && npm run build",
-        "heroku-postbuild": "cd frontend && npm install && npm run build"
+        "render-start": "npm run build && cd backend && npm start"
     },
     "devDependencies": {
         "nodemon": "^3.1.7",
